@@ -16,13 +16,14 @@
   "license": "ISC",
   "dependencies": {
     "express": "^5.2.1",
-    "uuid": "^13.0.0",
+    "uuid": "^9.0.1",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/uuid": "^9.0.8",
     "cors": "^2.8.6",
     "eslint": "^9.39.2",
     "remove": "^0.1.5",
