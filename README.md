@@ -67,9 +67,16 @@ medisync-ehr/
 
 ## Screenshots
 
-|                                Directory                                 |                               Patient details                               |                               Add patient                               |                              Add entry                              |
-| :----------------------------------------------------------------------: | :-------------------------------------------------------------------------: | :---------------------------------------------------------------------: | :-----------------------------------------------------------------: |
-| <img src="./screenshots/patientor-dashboard.png" width="340" /> | <img src="./screenshots/patient-entries.png" width="340" /> | <img src="./screenshots/add-patient.png" width="340" /> | <img src="./screenshots/add-entry.png" width="340" /> |
+<p align="center">
+  <img src="./screenshots/patient-details.png" width="640" />
+  <br /><em>Patient record — typed medical entries with monospace identifiers and coded diagnoses</em>
+</p>
+
+<p align="center">
+  <img src="./screenshots/add-entry.png" width="300" />
+  <img src="./screenshots/directory.png" width="300" />
+  <img src="./screenshots/add-patient.png" width="300" />
+</p>
 
 ## Getting started
 
