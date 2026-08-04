@@ -1,19 +1,17 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
-import { Button, Divider, Container, Typography } from "@mui/material";
-
-import { Button as UiButton } from "@/components/ui/button";
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+  BrowserRouter as Router,
+  NavLink,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
+import { Users } from "lucide-react";
+
+import { Toaster } from "@/components/ui/sonner";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 import { apiBaseUrl } from "./constants";
 import { Patient } from "./types";
@@ -21,90 +19,87 @@ import { Patient } from "./types";
 import patientService from "./services/patients";
 import PatientListPage from "./components/PatientListPage";
 import PatientDetails from "./components/PatientListPage/PatientDetails";
-import { Notification } from "./components/Notification";
-import { useNotification } from "./utility/useNotification";
-import { Home } from "@mui/icons-material";
+import ThemeToggle from "./components/ThemeToggle";
 
-const App = () => {
+const AppShell = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
-  const [message, notify] = useNotification();
-  const [shadcnValue, setShadcnValue] = useState("");
-  const [clickCount, setClickCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
-
-    const fetchPatientList = async () => {
-      const patients = await patientService.getAll();
-      setPatients(patients);
-    };
-    void fetchPatientList();
   }, []);
 
+  useEffect(() => {
+    if (location.pathname !== "/") return;
+
+    let active = true;
+    patientService.getAll().then((patients) => {
+      if (active) {
+        setPatients(patients);
+        setLoading(false);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [location.pathname]);
+
   return (
-    <div className="App">
-      <Router>
-        <Container>
-          <Typography variant="h3" style={{ marginBottom: "0.5em" }}>
-            Patientor
-          </Typography>
-          <Button
-            component={Link}
-            to="/"
-            variant="contained"
-            color="primary"
-            startIcon={<Home />}
-          >
-            Home
-          </Button>
-          <Notification message={message} />
-          <Divider hidden />
-          <div className="my-6 flex w-full max-w-sm flex-col gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  Shadcn check
-                  <Badge variant="secondary">working</Badge>
-                </CardTitle>
-                <CardDescription>
-                  Rendered via @/components/ui imports.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-3">
-                <div className="grid gap-1.5">
-                  <Label htmlFor="demo">Demo input</Label>
-                  <Input
-                    id="demo"
-                    value={shadcnValue}
-                    onChange={(e) => setShadcnValue(e.target.value)}
-                    placeholder="Type something..."
-                  />
-                </div>
-                <UiButton onClick={() => setClickCount((c) => c + 1)}>
-                  Clicked {clickCount} times
-                </UiButton>
-              </CardContent>
-            </Card>
+    <div className="flex min-h-screen flex-col">
+      <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur">
+        <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-4">
+          <div className="flex items-center gap-6">
+            <NavLink to="/" className="flex items-center gap-2 font-semibold">
+              <img
+                src="/medisync.svg"
+                alt="MediSync logo"
+                className="size-7 shrink-0"
+              />
+              MediSync EHR
+            </NavLink>
+            <nav className="flex items-center gap-1">
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  cn(
+                    buttonVariants({ variant: "ghost", size: "sm" }),
+                    isActive && "bg-accent text-accent-foreground",
+                  )
+                }
+              >
+                <Users />
+                Patients
+              </NavLink>
+            </nav>
           </div>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <PatientListPage
-                  patients={patients}
-                  setPatients={setPatients}
-                />
-              }
-            />
-            <Route
-              path="/patients/:id"
-              element={<PatientDetails notify={notify} />}
-            />
-          </Routes>
-        </Container>
-      </Router>
+          <ThemeToggle />
+        </div>
+      </header>
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <PatientListPage
+                patients={patients}
+                setPatients={setPatients}
+                loading={loading}
+              />
+            }
+          />
+          <Route path="/patients/:id" element={<PatientDetails />} />
+        </Routes>
+      </main>
     </div>
   );
 };
+
+const App = () => (
+  <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <AppShell />
+    <Toaster richColors position="top-right" />
+  </Router>
+);
 
 export default App;

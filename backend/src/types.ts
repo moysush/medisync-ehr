@@ -73,6 +73,6 @@ export enum Gender {
   Other = "other",
 }
 
-export type NonSensitivePatient = Omit<Patient, "ssn" | "entries">;
+export type NonSensitivePatient = Omit<Patient, "ssn">;
 export type NewPatientEntry = z.infer<typeof NewPatientSchema>;
 export type EntryWithoutId = UnionOmit<Entry, "id">;

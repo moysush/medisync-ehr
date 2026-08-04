@@ -1,26 +1,27 @@
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import MedicalInformationIcon from "@mui/icons-material/MedicalInformation";
-import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
-import HealthAndSafetyIcon from "@mui/icons-material/HealthAndSafety";
-import { Diagnosis, Entry } from "../../types";
-import { Typography } from "@mui/material";
-import { assertNever } from "../../utility/assertNever";
+import {
+  BriefcaseBusiness,
+  Heart,
+  Hospital,
+  ShieldCheck,
+  Stethoscope,
+} from "lucide-react";
 
-const getHealthRatingColor = (rating: number) => {
-  switch (rating) {
-    case 0:
-      return "green";
-    case 1:
-      return "yellow";
-    case 2:
-      return "orange";
-    case 3:
-      return "red";
-    default:
-      console.warn('Unexpected health rating:', rating);
-      return "inherit";
-  }
-};
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+
+import { Diagnosis, Entry } from "../../types";
+import { assertNever } from "../../utility/assertNever";
+import { formatDate } from "../../utility/format";
+import { healthRatingMeta } from "../../utility/healthRating";
+
+const entryTypeMeta = {
+  Hospital: { label: "Hospital", icon: Hospital },
+  HealthCheck: { label: "Health check", icon: ShieldCheck },
+  OccupationalHealthcare: {
+    label: "Occupational",
+    icon: Stethoscope,
+  },
+} as const;
 
 interface EntryProps {
   entry: Entry;
@@ -29,86 +30,96 @@ interface EntryProps {
 
 interface EntryWrapperProps {
   entry: Entry;
-  icon: React.ReactNode;
   diagnoses: Diagnosis[];
   children?: React.ReactNode;
 }
 
-const EntryWrapper = ({
-  entry,
-  icon,
-  diagnoses,
-  children,
-}: EntryWrapperProps) => (
-  <div>
-    <Typography
-      sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
-      variant="h6"
-    >
-      {entry.date} {icon}{" "}
-      {entry.type === "OccupationalHealthcare" ? entry.employerName : null}
-    </Typography>
-    <Typography>
-      <i>{entry.description}</i>
-    </Typography>
-    {entry.diagnosisCodes && (
-      <ul>
-        {entry.diagnosisCodes.map((c) => {
-          return (
-            <li key={c}>
-              {c} {diagnoses?.find((d) => d.code === c)?.name}
-            </li>
-          );
-        })}
-      </ul>
-    )}
-    {children}
-    <Typography sx={{ mt: 1 }}>Diagnosed by {entry.specialist}</Typography>
-  </div>
-);
+const EntryWrapper = ({ entry, diagnoses, children }: EntryWrapperProps) => {
+  const meta = entryTypeMeta[entry.type];
+
+  return (
+    <Card>
+      <CardContent className="flex flex-col gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="flex size-8 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+            <meta.icon className="size-4" />
+          </span>
+          <Badge variant="outline">{meta.label}</Badge>
+          <span className="text-sm font-medium">{formatDate(entry.date)}</span>
+          {entry.type === "OccupationalHealthcare" && (
+            <Badge variant="secondary" className="gap-1">
+              <BriefcaseBusiness className="size-3" />
+              {entry.employerName}
+            </Badge>
+          )}
+        </div>
+
+        <p className="text-base">{entry.description}</p>
+
+        {entry.diagnosisCodes && entry.diagnosisCodes.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {entry.diagnosisCodes.map((code) => {
+              const diagnosis = diagnoses?.find((d) => d.code === code);
+              return (
+                <Badge key={code} variant="secondary" className="gap-1 font-mono text-xs">
+                  {code}
+                  {diagnosis?.name && (
+                    <span className="font-sans font-normal text-muted-foreground">
+                      {diagnosis.name}
+                    </span>
+                  )}
+                </Badge>
+              );
+            })}
+          </div>
+        )}
+
+        {children}
+
+        <p className="text-sm text-muted-foreground">
+          Diagnosed by {entry.specialist}
+        </p>
+      </CardContent>
+    </Card>
+  );
+};
 
 const EntryDetails = ({ entry, diagnoses }: EntryProps) => {
   switch (entry.type) {
     case "Hospital":
       return (
-        <EntryWrapper
-          entry={entry}
-          icon={<LocalHospitalIcon />}
-          diagnoses={diagnoses}
-        >
-          <Typography>
-            Discharge: {entry.discharge.date} - {entry.discharge.criteria}
-          </Typography>
+        <EntryWrapper entry={entry} diagnoses={diagnoses}>
+          <p className="text-sm">
+            <span className="text-muted-foreground">Discharge: </span>
+            {formatDate(entry.discharge.date)}
+            {entry.discharge.criteria && ` — ${entry.discharge.criteria}`}
+          </p>
         </EntryWrapper>
       );
     case "HealthCheck":
       return (
-        <EntryWrapper
-          entry={entry}
-          icon={<HealthAndSafetyIcon />}
-          diagnoses={diagnoses}
-        >
-          <Typography>
-            {
-              <FavoriteIcon
-                sx={{ color: getHealthRatingColor(entry.healthCheckRating) }}
-              />
-            }
-          </Typography>
+        <EntryWrapper entry={entry} diagnoses={diagnoses}>
+          <span className="flex items-center gap-1.5 text-sm">
+            <Heart
+              className={`size-4 ${healthRatingMeta[entry.healthCheckRating].color}`}
+            />
+            <span
+              className={`font-medium ${healthRatingMeta[entry.healthCheckRating].color}`}
+            >
+              {healthRatingMeta[entry.healthCheckRating].label}
+            </span>
+          </span>
         </EntryWrapper>
       );
     case "OccupationalHealthcare":
       return (
-        <EntryWrapper
-          entry={entry}
-          icon={<MedicalInformationIcon />}
-          diagnoses={diagnoses}
-        >
+        <EntryWrapper entry={entry} diagnoses={diagnoses}>
           {entry.sickLeave && (
-            <Typography>
-              Sickleave: {entry.sickLeave?.startDate} -{" "}
-              {entry.sickLeave?.endDate}
-            </Typography>
+            <p className="text-sm">
+              <span className="text-muted-foreground">Sick leave: </span>
+              {formatDate(entry.sickLeave.startDate)} —{" "}
+              {formatDate(entry.sickLeave.endDate)}
+            </p>
           )}
         </EntryWrapper>
       );

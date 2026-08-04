@@ -12,6 +12,11 @@
   },
   "iconLibrary": "lucide",
   "rtl": false,
+  "theme": "emerald",
+  "chartColor": "emerald",
+  "font": "geist",
+  "fontHeading": "inherit",
+  "radius": "default",
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils",

@@ -12,9 +12,11 @@ const getPatients = () => {
 };
 
 const getNonSensitivePatient = (): NonSensitivePatient[] => {
-  return patients.map(({ id, name, dateOfBirth, gender, occupation }) => {
-    return { id, name, dateOfBirth, gender, occupation };
-  });
+  return patients.map(
+    ({ id, name, dateOfBirth, gender, occupation, entries }) => {
+      return { id, name, dateOfBirth, gender, occupation, entries };
+    },
+  );
 };
 
 const addPatient = (object: NewPatientEntry): Patient => {
