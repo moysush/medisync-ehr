@@ -40,7 +40,9 @@ const DatePickerField = ({
           >
             <CalendarIcon className="size-4 shrink-0 text-muted-foreground" />
             {date ? (
-              format(date, "MMM d, yyyy")
+              <span className="font-mono tabular-nums">
+                {format(date, "MMM d, yyyy")}
+              </span>
             ) : (
               <span className="text-muted-foreground">{placeholder}</span>
             )}

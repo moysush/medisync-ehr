@@ -84,12 +84,14 @@ const PatientDetails = () => {
           <div className="flex items-center gap-2">
             <IdCard className="size-4 text-muted-foreground" />
             <span className="text-muted-foreground">SSN:</span>
-            {patient.ssn ?? "-"}
+            <span className="font-mono tabular-nums">{patient.ssn ?? "-"}</span>
           </div>
           <div className="flex items-center gap-2">
             <CalendarDays className="size-4 text-muted-foreground" />
             <span className="text-muted-foreground">Date of birth:</span>
-            {patient.dateOfBirth ? formatDate(patient.dateOfBirth) : "-"}
+            <span className="font-mono tabular-nums">
+              {patient.dateOfBirth ? formatDate(patient.dateOfBirth) : "-"}
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <BriefcaseBusiness className="size-4 text-muted-foreground" />

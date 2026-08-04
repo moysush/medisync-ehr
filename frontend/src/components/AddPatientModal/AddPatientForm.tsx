@@ -27,7 +27,7 @@ interface GenderOption {
 
 const genderOptions: GenderOption[] = Object.values(Gender).map((v) => ({
   value: v,
-  label: v.toString(),
+  label: v.charAt(0).toUpperCase() + v.slice(1),
 }));
 
 const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
@@ -54,6 +54,7 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
         <Label htmlFor="patient-name">Name</Label>
         <Input
           id="patient-name"
+          placeholder="e.g. John Doe"
           value={name}
           onChange={({ target }) => setName(target.value)}
         />
@@ -62,6 +63,7 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
         <Label htmlFor="patient-ssn">Social security number</Label>
         <Input
           id="patient-ssn"
+          placeholder="e.g. 123-45-6789"
           value={ssn}
           onChange={({ target }) => setSsn(target.value)}
         />
@@ -76,6 +78,7 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
         <Label htmlFor="patient-occupation">Occupation</Label>
         <Input
           id="patient-occupation"
+          placeholder="e.g. Software engineer"
           value={occupation}
           onChange={({ target }) => setOccupation(target.value)}
         />

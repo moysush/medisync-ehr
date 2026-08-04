@@ -45,7 +45,9 @@ const EntryWrapper = ({ entry, diagnoses, children }: EntryWrapperProps) => {
             <meta.icon className="size-4" />
           </span>
           <Badge variant="outline">{meta.label}</Badge>
-          <span className="text-sm font-medium">{formatDate(entry.date)}</span>
+          <span className="text-sm font-medium font-mono tabular-nums">
+            {formatDate(entry.date)}
+          </span>
           {entry.type === "OccupationalHealthcare" && (
             <Badge variant="secondary" className="gap-1">
               <BriefcaseBusiness className="size-3" />
@@ -91,7 +93,9 @@ const EntryDetails = ({ entry, diagnoses }: EntryProps) => {
         <EntryWrapper entry={entry} diagnoses={diagnoses}>
           <p className="text-sm">
             <span className="text-muted-foreground">Discharge: </span>
-            {formatDate(entry.discharge.date)}
+            <span className="font-mono tabular-nums">
+              {formatDate(entry.discharge.date)}
+            </span>
             {entry.discharge.criteria && ` — ${entry.discharge.criteria}`}
           </p>
         </EntryWrapper>
@@ -99,16 +103,16 @@ const EntryDetails = ({ entry, diagnoses }: EntryProps) => {
     case "HealthCheck":
       return (
         <EntryWrapper entry={entry} diagnoses={diagnoses}>
-          <span className="flex items-center gap-1.5 text-sm">
+          <Badge variant="secondary" className="gap-1.5">
             <Heart
-              className={`size-4 ${healthRatingMeta[entry.healthCheckRating].color}`}
+              className={`size-3 ${healthRatingMeta[entry.healthCheckRating].color}`}
             />
             <span
               className={`font-medium ${healthRatingMeta[entry.healthCheckRating].color}`}
             >
               {healthRatingMeta[entry.healthCheckRating].label}
             </span>
-          </span>
+          </Badge>
         </EntryWrapper>
       );
     case "OccupationalHealthcare":
@@ -117,8 +121,13 @@ const EntryDetails = ({ entry, diagnoses }: EntryProps) => {
           {entry.sickLeave && (
             <p className="text-sm">
               <span className="text-muted-foreground">Sick leave: </span>
-              {formatDate(entry.sickLeave.startDate)} —{" "}
-              {formatDate(entry.sickLeave.endDate)}
+              <span className="font-mono tabular-nums">
+                {formatDate(entry.sickLeave.startDate)}
+              </span>
+              {" — "}
+              <span className="font-mono tabular-nums">
+                {formatDate(entry.sickLeave.endDate)}
+              </span>
             </p>
           )}
         </EntryWrapper>

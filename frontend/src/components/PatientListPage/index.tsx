@@ -86,7 +86,9 @@ const PatientListPage = ({ patients, setPatients, loading }: Props) => {
       setModalOpen(false);
       toast.success(`${patient.name} added to the directory`);
     } catch (e: unknown) {
-      setError(getErrorMessage(e));
+      const message = getErrorMessage(e);
+      setError(message);
+      toast.error(message);
     }
   };
 

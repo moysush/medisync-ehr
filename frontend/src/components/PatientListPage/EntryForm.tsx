@@ -194,6 +194,7 @@ const EntryForm = ({
         <Input
           id="entry-description"
           type="text"
+          placeholder="Describe the visit, symptoms or findings"
           value={form.description}
           onChange={({ target }) => update("description", target.value)}
         />
@@ -257,7 +258,7 @@ const EntryForm = ({
                         data-checked={selected}
                         onSelect={() => toggleDiagnosisCode(d.code)}
                       >
-                        <span className="font-medium tabular-nums">
+                        <span className="font-mono font-medium">
                           {d.code}
                         </span>
                         <span className="min-w-0 flex-1 truncate text-muted-foreground">
@@ -325,9 +326,6 @@ const EntryForm = ({
               );
             })}
           </div>
-          <p className="text-sm text-muted-foreground">
-            {healthRatingMeta[form.healthCheckRating].label}
-          </p>
         </div>
       )}
 
@@ -345,6 +343,7 @@ const EntryForm = ({
             <Label htmlFor="discharge-criteria">Discharge criteria</Label>
             <Input
               id="discharge-criteria"
+              placeholder="e.g. Patient stable, no further care required"
               value={form.discharge.criteria}
               onChange={({ target }) =>
                 update("discharge", {
@@ -363,6 +362,7 @@ const EntryForm = ({
             <Label htmlFor="employer-name">Employer name</Label>
             <Input
               id="employer-name"
+              placeholder="e.g. Acme Corp"
               value={form.employerName}
               onChange={({ target }) => update("employerName", target.value)}
             />

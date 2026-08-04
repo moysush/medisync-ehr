@@ -98,7 +98,7 @@ const AppShell = () => {
 const App = () => (
   <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
     <AppShell />
-    <Toaster richColors position="top-right" />
+    <Toaster richColors position="bottom-right" />
   </Router>
 );
 
