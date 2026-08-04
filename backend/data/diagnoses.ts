@@ -77,6 +77,86 @@ const data: Diagnosis[] = [
     "code": "H35.29",
     "name": "Other proliferative retinopathy",
     "latin": "Alia retinopathia proliferativa"
+  },
+  {
+    "code": "I10",
+    "name": "Essential (primary) hypertension",
+    "latin": "Hypertensio arterialis essentialis"
+  },
+  {
+    "code": "I48.9",
+    "name": "Atrial fibrillation and flutter, unspecified",
+    "latin": "Fibrillatio et fluctuatio atrialis non specificata"
+  },
+  {
+    "code": "E11.9",
+    "name": "Type 2 diabetes mellitus without complications",
+    "latin": "Diabetes mellitus typi 2 sine complicationibus"
+  },
+  {
+    "code": "E03.9",
+    "name": "Hypothyroidism, unspecified",
+    "latin": "Hypothyreosis non specificata"
+  },
+  {
+    "code": "J45.9",
+    "name": "Unspecified asthma",
+    "latin": "Asthma non specificatum"
+  },
+  {
+    "code": "J44.1",
+    "name": "Chronic obstructive pulmonary disease with (acute) exacerbation",
+    "latin":
+      "Morbus pulmonalis obstructivus chronicus cum exacerbatione acuta"
+  },
+  {
+    "code": "K21.9",
+    "name": "Gastro-esophageal reflux disease without esophagitis",
+    "latin": "Morbus refluxus gastrooesophagealis sine oesophagitide"
+  },
+  {
+    "code": "K29.7",
+    "name": "Gastritis, unspecified",
+    "latin": "Gastritis non specificata"
+  },
+  {
+    "code": "G43.9",
+    "name": "Migraine, unspecified",
+    "latin": "Migraena non specificata"
+  },
+  {
+    "code": "G40.9",
+    "name": "Epilepsy, unspecified",
+    "latin": "Epilepsia non specificata"
+  },
+  {
+    "code": "F41.9",
+    "name": "Anxiety disorder, unspecified",
+    "latin": "Perturbatio anxietatis non specificata"
+  },
+  {
+    "code": "C50.9",
+    "name": "Malignant neoplasm of breast, unspecified",
+    "latin": "Neoplasma malignum mammae non specificatum"
+  },
+  {
+    "code": "M54.5",
+    "name": "Low back pain",
+    "latin": "Dorsalgia lumbalis"
+  },
+  {
+    "code": "M17.9",
+    "name": "Osteoarthritis of knee, unspecified",
+    "latin": "Gonarthrosis non specificata"
+  },
+  {
+    "code": "S93.4",
+    "name": "Sprain and strain of ankle",
+    "latin": "Distorsio articulationis talocruralis"
+  },
+  {
+    "code": "Z00.0",
+    "name": "General medical examination"
   }
 ];
 

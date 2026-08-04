@@ -110,6 +110,105 @@ const patients: Patient[] = [
       },
     ],
   },
+  {
+    id: '6120bf34-8bbf-4f81-9f5f-bcbaa4e8249d',
+    name: 'Eleanor Whitman',
+    dateOfBirth: '1958-11-12',
+    ssn: '121158-2047',
+    gender: Gender.Female,
+    occupation: 'Retired school principal',
+    entries: [
+      {
+        id: 'e7f9d02e-9178-412d-b9a4-f74b28e73c57',
+        date: '2025-11-12',
+        type: 'Hospital',
+        specialist: 'Dr. Margaret Chen',
+        diagnosisCodes: ['I48.9'],
+        description:
+          'Admitted with palpitations and shortness of breath. Atrial fibrillation confirmed on ECG; rhythm controlled with medication.',
+        discharge: {
+          date: '2025-11-18',
+          criteria: 'Stable sinus rhythm, anticoagulation started. Cardio follow-up in 4 weeks.',
+        },
+      },
+      {
+        id: '36b18e5a-f136-4515-b125-a56e38d24b09',
+        date: '2026-03-02',
+        specialist: 'Dr. Margaret Chen',
+        type: 'HealthCheck',
+        description:
+          'Annual review. Blood pressure and fasting glucose persistently elevated despite diet; referred to endocrinology.',
+        healthCheckRating: 3,
+        diagnosisCodes: ['I10', 'E11.9'],
+      },
+    ],
+  },
+  {
+    id: 'fcd3061a-2f94-4908-95d6-e8bb6ee64655',
+    name: 'Priya Nair',
+    dateOfBirth: '1990-03-15',
+    ssn: '150390-118L',
+    gender: Gender.Female,
+    occupation: 'DevOps engineer',
+    entries: [
+      {
+        id: '53deafdc-8a1e-4ec1-a16d-a5ab27b6ee4e',
+        date: '2024-09-15',
+        type: 'OccupationalHealthcare',
+        specialist: 'Dr. Robert Okafor',
+        employerName: 'CloudNest',
+        diagnosisCodes: ['M54.5'],
+        description:
+          'Ergonomic strain from long hours at a standing desk. Physiotherapy and workstation adjustment recommended.',
+        sickLeave: {
+          startDate: '2024-09-15',
+          endDate: '2024-10-13',
+        },
+      },
+      {
+        id: 'f8e7fe02-43d4-4704-8445-f215cfcf1a39',
+        date: '2026-06-10',
+        specialist: 'Dr. Sarah Lindqvist',
+        type: 'HealthCheck',
+        description:
+          'Routine health check. All values within normal range; back pain fully resolved.',
+        healthCheckRating: 1,
+      },
+    ],
+  },
+  {
+    id: 'be79046d-8dd2-4280-b1d3-dc1a3db8d431',
+    name: 'Tomás Rivera',
+    dateOfBirth: '2008-07-14',
+    ssn: '140708-667X',
+    gender: Gender.Male,
+    occupation: 'Student',
+    entries: [
+      {
+        id: '173e6638-0619-4c4d-9e17-2d35f9df3a36',
+        date: '2023-07-22',
+        type: 'Hospital',
+        specialist: 'Dr. Amelia Foster',
+        diagnosisCodes: ['S93.4'],
+        description:
+          'Twisted ankle during football training. X-ray rules out fracture; significant ligamentous strain.',
+        discharge: {
+          date: '2023-07-23',
+          criteria: 'RICE protocol; physiotherapy referral.',
+        },
+      },
+      {
+        id: 'ab9fd021-6e37-468a-a4ff-85e07d3f8a7f',
+        date: '2026-02-14',
+        specialist: 'Dr. Amelia Foster',
+        type: 'HealthCheck',
+        description:
+          'Mild asthma flare-up after seasonal change. Inhaler technique reviewed and medication adjusted.',
+        healthCheckRating: 2,
+        diagnosisCodes: ['J45.9'],
+      },
+    ],
+  },
 ];
 
 export default patients;
