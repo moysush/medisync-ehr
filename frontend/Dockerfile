@@ -1,7 +1,7 @@
-FROM node:24 AS build-stage
+FROM node:24-alpine AS build-stage
 WORKDIR /usr/src/app
 COPY . .
-RUN npm ci
+RUN npm ci --omit=dev
 RUN npm run build
 
 FROM nginx:1.29-alpine
