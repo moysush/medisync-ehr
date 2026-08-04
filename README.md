@@ -12,6 +12,12 @@ A full-stack, **end-to-end type-safe** electronic health record system for manag
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![pnpm](https://img.shields.io/badge/pnpm-F69220?style=for-the-badge&logo=pnpm&logoColor=white)](https://pnpm.io/)
 
+<p align="center">
+  <a href="https://medisync-ehr.vercel.app/">
+    <img src="https://img.shields.io/badge/Live%20Demo-medisync--ehr.vercel.app-22c55e?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
+  </a>
+</p>
+
 ---
 
 ## Highlights
