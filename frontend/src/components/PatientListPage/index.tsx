@@ -92,7 +92,9 @@ const PatientListPage = ({ patients, setPatients, loading }: Props) => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Patient Directory</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Patient Directory
+          </h1>
           <p className="text-sm text-muted-foreground">
             View and manage patient records
           </p>
@@ -119,7 +121,9 @@ const PatientListPage = ({ patients, setPatients, loading }: Props) => {
                 </span>
               )}
               <div>
-                <p className="text-3xl font-bold leading-none tracking-tight">{value}</p>
+                <p className="text-3xl font-bold leading-none tracking-tight">
+                  {value}
+                </p>
                 <p className="mt-1 text-sm text-muted-foreground">{label}</p>
               </div>
             </CardContent>
@@ -134,13 +138,17 @@ const PatientListPage = ({ patients, setPatients, loading }: Props) => {
         onChange={setQuery}
       />
 
-      <Card>
+      <Card className="py-0">
         <CardContent className="p-0">
           <Table className="text-[15px]">
             <TableHeader>
               <TableRow>
-                <TableHead className={`${headCellClass} w-[30%]`}>Name</TableHead>
-                <TableHead className={`${headCellClass} w-32`}>Gender</TableHead>
+                <TableHead className={`${headCellClass} w-[30%]`}>
+                  Name
+                </TableHead>
+                <TableHead className={`${headCellClass} w-32`}>
+                  Gender
+                </TableHead>
                 <TableHead className={headCellClass}>Occupation</TableHead>
                 <TableHead className={`${headCellClass} w-24 text-right`}>
                   Entries
@@ -152,23 +160,21 @@ const PatientListPage = ({ patients, setPatients, loading }: Props) => {
               {loading
                 ? Array.from({ length: 5 }).map((_, i) => (
                     <TableRow key={i}>
-                      {["w-28", "w-20", "w-32", "w-10"].map(
-                        (width, j) => (
-                          <TableCell
-                            key={j}
-                            className={`px-4 py-3 ${j === 3 ? "text-right" : ""}`}
-                          >
-                            {j === 0 ? (
-                              <div className="flex items-center gap-3">
-                                <Skeleton className="size-8 rounded-full" />
-                                <Skeleton className={`h-5 ${width}`} />
-                              </div>
-                            ) : (
+                      {["w-28", "w-20", "w-32", "w-10"].map((width, j) => (
+                        <TableCell
+                          key={j}
+                          className={`px-4 py-3 ${j === 3 ? "text-right" : ""}`}
+                        >
+                          {j === 0 ? (
+                            <div className="flex items-center gap-3">
+                              <Skeleton className="size-8 rounded-full" />
                               <Skeleton className={`h-5 ${width}`} />
-                            )}
-                          </TableCell>
-                        ),
-                      )}
+                            </div>
+                          ) : (
+                            <Skeleton className={`h-5 ${width}`} />
+                          )}
+                        </TableCell>
+                      ))}
                       <TableCell className="px-2 py-3">
                         <Skeleton className="ml-auto h-4 w-4" />
                       </TableCell>

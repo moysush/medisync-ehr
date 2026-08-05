@@ -20,6 +20,7 @@ import patientService from "./services/patients";
 import PatientListPage from "./components/PatientListPage";
 import PatientDetails from "./components/PatientListPage/PatientDetails";
 import ThemeToggle from "./components/ThemeToggle";
+import Logo from "./components/Logo";
 
 const AppShell = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -51,11 +52,7 @@ const AppShell = () => {
         <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-4">
           <div className="flex items-center gap-6">
             <NavLink to="/" className="flex items-center gap-2 font-semibold">
-              <img
-                src="/medisync.svg"
-                alt="MediSync logo"
-                className="size-7 shrink-0"
-              />
+              <Logo className="size-7 shrink-0" />
               MediSync EHR
             </NavLink>
             <nav className="flex items-center gap-1">
