@@ -7,10 +7,6 @@ import {
 } from "../types";
 import { v4 as uuid } from "uuid";
 
-const getPatients = () => {
-  return patients;
-};
-
 const getNonSensitivePatient = (): NonSensitivePatient[] => {
   return patients.map(
     ({ id, name, dateOfBirth, gender, occupation, entries }) => {
@@ -41,7 +37,6 @@ const findById = (id: string) => {
 };
 
 export default {
-  getPatients,
   getNonSensitivePatient,
   addPatient,
   findById,

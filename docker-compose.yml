@@ -3,16 +3,12 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/usr/src/app
     container_name: patientor-front
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    volumes:
-      - ./backend:/usr/src/app
     container_name: patientor-back
 
   nginx:

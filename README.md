@@ -1,6 +1,6 @@
 # MediSync EHR
 
-A full-stack, **end-to-end type-safe** electronic health record system for managing patient directories and structured medical histories. The frontend is a React + Vite + shadcn/ui SPA, the backend a layered Express + Zod API, both written in strict TypeScript and containerized with Docker.
+An end-to-end type-safe electronic health record for managing patient directories and structured medical histories. React + Vite + shadcn/ui on the front, Express + Zod on the back, strict TypeScript throughout, containerized with Docker.
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
@@ -18,156 +18,155 @@ A full-stack, **end-to-end type-safe** electronic health record system for manag
   </a>
 </p>
 
----
-
-## Highlights
-
-- **Patient directory** with live statistics, instant search by name or occupation, avatar initials, gender badges, and clickable rows that navigate to a full record.
-- **Typed medical entries** covering three specializations — **Health Check**, **Hospital**, and **Occupational Healthcare** — each validated as a Zod *discriminated union* and rendered with its own specialized UI.
-- **Searchable diagnosis codes**: a combobox backed by an ICD-10-style code list (`S62.5`, `J10.1`, ...) supporting multi-select with removable tag pills.
-- **Precise data typography**: SSNs, dates, and diagnosis codes render in monospace with tabular numerals so dense medical identifiers stay scannable next to body text.
-- **Calendar-first inputs**: every date field (birth date, entry date, discharge, sick-leave range) uses a proper calendar picker instead of free-text.
-- **Feedback everywhere**: skeleton loaders while fetching, a designed empty state, and success/error toasts for every mutation — no guessing whether an action worked.
-- **Light / dark / system** theme toggle with a Flash-of-Wrong-Theme prevention script and a custom flat brand mark used across favicon and header.
-
-## Why it's built this way
-
-- **End-to-end type safety.** The domain model (`Patient`, `Entry`, `Diagnosis`, `Gender`) is expressed once as strict TypeScript and mirrored across client and server. A malformed payload cannot silently survive the boundary.
-- **Validation at the edge.** All inbound data is parsed by **Zod** schemas before it touches business logic; entry types are validated as a discriminated union, and exhaustive rendering on the client is guaranteed with an `assertNever` helper — adding a new entry type produces compile errors everywhere it must be handled.
-- **Layered backend.** Routes stay thin; business logic and data access live in services; seed data lives in a dedicated module. Swapping the in-memory store for a real database changes one file, not the API surface.
-- **Componentized UI.** A curated shadcn/ui + Radix primitive layer sits under feature components, giving consistent, accessible markup with almost no bespoke CSS.
-- **Reproducible tooling.** pnpm with a frozen lockfile, multi-stage production images, and a dedicated dev Compose stack with Vite HMR behind an nginx reverse proxy. Production images are kept lean (the backend runtime is Alpine + Node, ~136MB), and the frontend nginx config adds SPA history-mode fallback so deep links survive a refresh.
-
-## Tech stack
-
-| Layer       | Choice                                                                                |
-| ----------- | ------------------------------------------------------------------------------------- |
-| Frontend    | React 18, TypeScript, Vite, Tailwind CSS v4, shadcn/ui (radix-rhea preset), Radix UI   |
-| State & UI  | React Router, lucide-react icons, next-themes, sonner toasts                          |
-| Forms       | react-day-picker, date-fns, cmdk combobox                                              |
-| Backend     | Node.js, Express 5, TypeScript, Zod 4, uuid                                            |
-| Infra       | Docker, docker compose, nginx reverse proxy, pnpm                                      |
-
-## Project structure
-
-```text
-medisync-ehr/
-├── frontend/                 # React SPA (Vite + Tailwind v4 + shadcn/ui)
-│   ├── nginx.conf            # Static-serving config with SPA fallback
-│   ├── src/
-│   │   ├── components/       # Pages, forms, and shadcn/ui primitives
-│   │   ├── services/         # Typed Axios API clients
-│   │   ├── utility/          # Formatting, error mapping, health-rating meta
-│   │   └── types.ts          # Domain types shared with the API contract
-├── backend/                  # Express 5 REST API
-│   ├── src/
-│   │   ├── routes/           # HTTP transport layer
-│   │   ├── services/         # Business logic and data access
-│   │   ├── data/             # Seeded in-memory data (patients, diagnoses)
-│   │   ├── utils.ts          # Zod schemas and request validators
-│   │   └── types.ts          # Domain types and enums
-├── nginx.conf                # Production reverse proxy (:8080)
-├── nginx.dev.conf            # Dev proxy with Vite HMR upgrade headers
-├── docker-compose.yml        # Production-like compose stack
-└── docker-compose.dev.yml    # Development compose stack (hot reload)
-```
-
-## Screenshots
-
 <p align="center">
   <img src="./screenshots/patient-details.png" width="640" />
   <br /><em>Patient record — typed medical entries with monospace identifiers and coded diagnoses</em>
 </p>
 
 <p align="center">
-  <img src="./screenshots/add-entry.png" width="300" />
-  <img src="./screenshots/directory.png" width="300" />
-  <img src="./screenshots/add-patient.png" width="300" />
+  <img src="./screenshots/demo.gif" width="640" />
+  <br /><em>In action — search, record view, and a calendar entry that closes on selection</em>
 </p>
+
+## Features
+
+- **Patient directory** — live statistics, instant search by name or occupation, and one click to a full record.
+- **Typed medical entries** — Health Check, Hospital, and Occupational Healthcare, validated as a Zod *discriminated union* and rendered with type-specific UIs.
+- **Searchable diagnosis codes** — an ICD-10-style combobox with multi-select and removable tag pills.
+- **Calendar-first inputs** — every date field uses a calendar picker that closes on selection.
+- **Scannable identifiers** — SSNs, dates, and diagnosis codes in monospace with tabular numerals.
+- **Feedback everywhere** — skeleton loaders, designed empty states, and success/error toasts on every mutation.
+- **Light / dark / system** theming, applied without a flash of the wrong theme.
+
+## Architecture
+
+Three parts behind a single nginx entry point:
+
+```
+             :8080 (same-origin)
+Browser ───────────────► nginx
+                          │  /api   │  /
+                          ▼         ▼
+                     Express + Zod   static SPA
+                     (:3001)         (try_files → /index.html)
+```
+
+- **Typed contract.** `Patient`, `Entry`, and `Diagnosis` are defined once and mirrored across client and server, so a malformed payload cannot survive the boundary.
+- **Validation at the edge.** Zod parses every request body before it reaches business logic; entry types are validated as a discriminated union. Unknown routes return JSON `404`s, and unexpected errors collapse to a single JSON `500`.
+- **Layered backend.** Routes stay thin; business logic lives in services; seed data sits in a dedicated module — swapping the in-memory store for a database changes the data layer, not the API surface.
+- **Exhaustive rendering.** An `assertNever` helper turns "add a new entry type" into compile errors everywhere it must be handled.
+- **Lean containers.** The backend runtime is Alpine + Node at ~136MB (was ~410MB) via multi-stage builds, and nginx serves the frontend with SPA history fallback so deep links survive a refresh.
+
+## Tech stack
+
+| Layer       | Choice                                                                        |
+| ----------- | ----------------------------------------------------------------------------- |
+| Frontend    | React 18, TypeScript, Vite, Tailwind CSS v4, shadcn/ui (radix-rhea), Radix UI |
+| State & UI  | React Router, lucide-react, next-themes, sonner                                |
+| Forms       | react-day-picker, date-fns, cmdk combobox                                      |
+| Backend     | Node.js, Express 5, TypeScript, Zod 4, uuid                                    |
+| Infra       | Docker, docker compose, nginx, pnpm                                            |
+
+## Project structure
+
+```text
+medisync-ehr/
+├── frontend/                 # React SPA
+│   ├── Dockerfile            # Multi-stage build, served by nginx
+│   ├── nginx.conf            # Static-serving config with SPA fallback
+│   └── src/
+│       ├── components/       # Pages, forms, shadcn/ui primitives
+│       ├── services/         # Typed Axios API clients
+│       ├── utility/          # Formatting, error mapping, rating meta
+│       └── types.ts          # Domain types shared with the API contract
+├── backend/                  # Express 5 REST API
+│   ├── Dockerfile            # Multi-stage build → ~136MB runtime
+│   ├── requests/             # .rest files for API exploration
+│   └── src/
+│       ├── index.ts          # App bootstrap, 404 + error middleware
+│       ├── routes/           # HTTP transport layer
+│       ├── services/         # Business logic and data access
+│       ├── data/             # Seeded in-memory store
+│       ├── utils.ts          # Zod schemas and request validators
+│       └── types.ts          # Domain types and enums
+├── nginx.conf                # Production reverse proxy (:8080)
+├── nginx.dev.conf            # Dev proxy with Vite HMR upgrade headers
+├── docker-compose.yml        # Production-like stack
+└── docker-compose.dev.yml    # Development stack (hot reload)
+```
 
 ## Getting started
 
-### Option 1 — Docker (production-like)
+Requires pnpm (`corepack enable` if missing).
+
+### Docker — production-like
 
 ```bash
 docker compose up --build
 ```
 
-Open <http://localhost:8080> — nginx serves the static frontend and proxies `/api` to the backend.
+Open <http://localhost:8080>. nginx serves the static frontend and proxies `/api` to the backend.
 
-### Option 2 — Docker (development, hot reload)
+### Docker — development (hot reload)
 
 ```bash
 docker compose -f docker-compose.dev.yml up --build
 ```
 
-Same entry point (<http://localhost:8080>), but the frontend runs the Vite dev server with HMR and the backend restarts on changes.
+Same entry point, but the frontend runs the Vite dev server and the backend restarts on change.
 
-### Option 3 — Local (pnpm)
-
-Backend (defaults to `http://localhost:3001`):
+### Local (pnpm)
 
 ```bash
-cd backend
-pnpm install
-pnpm dev
+cd backend && pnpm install && pnpm dev    # API on :3001
+cd frontend && pnpm install && pnpm dev   # SPA on :5173
 ```
 
-Frontend (Vite dev server, proxies `/api` to `http://localhost:3001`):
+The frontend calls the API through a same-origin `/api` path — Vite proxies it to `:3001` in dev, nginx in Docker. To point elsewhere:
 
 ```bash
-cd frontend
-pnpm install
-pnpm dev
+echo "VITE_API_BASE_URL=https://api.example.com/api" > frontend/.env.local
 ```
-
-Open <http://localhost:5173>. The frontend calls the API through a same-origin `/api` path — Vite proxies it to the backend during local dev, and the nginx reverse proxy does the same in Docker. To point somewhere else, set `VITE_API_BASE_URL` (e.g. in `.env.local`):
-
-```bash
-VITE_API_BASE_URL=https://api.example.com/api
-```
-
-> Requires pnpm. If you don't have it, run `corepack enable` first.
 
 ## API
 
-| Method | Endpoint                  | Description                                          |
-| ------ | ------------------------- | ---------------------------------------------------- |
-| GET    | `/api/ping`               | Health check                                         |
-| GET    | `/api/diagnoses`          | All diagnosis codes                                  |
-| GET    | `/api/patients`           | Non-sensitive patient list (SSN stripped)            |
-| GET    | `/api/patients/:id`       | Full patient record, including entries               |
-| POST   | `/api/patients`           | Create a patient (Zod-validated)                     |
-| POST   | `/api/patients/:id/entries` | Append a typed entry (discriminated-union validated) |
+| Method | Endpoint                    | Description                              |
+| ------ | --------------------------- | ---------------------------------------- |
+| GET    | `/api/ping`                 | Health check                             |
+| GET    | `/api/diagnoses`            | All diagnosis codes                      |
+| GET    | `/api/patients`             | Patient list (SSN stripped)              |
+| GET    | `/api/patients/:id`         | Full record incl. entries — `404` if unknown |
+| POST   | `/api/patients`             | Create a patient (Zod-validated)         |
+| POST   | `/api/patients/:id/entries` | Append a typed entry — `404` if unknown  |
 
-Every `POST` body is validated server-side with Zod; malformed payloads return structured `400` errors instead of reaching the data layer.
+Request bodies are validated server-side; malformed payloads return structured `400` errors instead of reaching the data layer.
 
 ## Scripts
 
-| Package  | Script     | Description                                          |
-| -------- | ---------- | ---------------------------------------------------- |
-| backend  | `pnpm dev` | Run with ts-node-dev (auto-restart on change)        |
-| backend  | `pnpm build` | Compile strict TypeScript to `build/`              |
-| backend  | `pnpm start` | Run the compiled server                             |
-| backend  | `pnpm lint` | ESLint (flat config)                                |
-| frontend | `pnpm dev` | Vite dev server with HMR                             |
-| frontend | `pnpm build` | `tsc --noEmit` + production build                   |
-| frontend | `pnpm lint` | ESLint with unused-disable reporting                |
-| frontend | `pnpm preview` | Preview the production build                       |
+| Package  | Script      | Description                                   |
+| -------- | ----------- | --------------------------------------------- |
+| backend  | `pnpm dev`  | Run with ts-node-dev (auto-restart)           |
+| backend  | `pnpm build`| Compile TypeScript to `build/`                |
+| backend  | `pnpm start`| Run the compiled server                       |
+| backend  | `pnpm lint` | ESLint (flat config)                          |
+| frontend | `pnpm dev`  | Vite dev server with HMR                      |
+| frontend | `pnpm build`| Type-check + production build                 |
+| frontend | `pnpm lint` | ESLint with unused-disable reporting          |
+| frontend | `pnpm preview` | Preview the production build              |
 
 ## Environment variables
 
-| Variable            | Scope    | Default                        |
-| ------------------- | -------- | ------------------------------ |
-| `PORT`              | backend  | `3001`                         |
-| `VITE_API_BASE_URL` | frontend | `/api` (same-origin; Vite/nginx proxy to backend) |
+| Variable            | Scope    | Default                          |
+| ------------------- | -------- | -------------------------------- |
+| `PORT`              | backend  | `3001`                           |
+| `VITE_API_BASE_URL` | frontend | `/api` (proxied by Vite/nginx)   |
 
-## What's next
+## Roadmap
 
-- Automated tests: unit + integration suites for the Zod schemas and services, component tests with Testing Library.
-- Persistent storage: replace the seeded in-memory repository with PostgreSQL.
-- Real authentication and role-based access control for clinicians.
-- FHIR-aligned export for interoperability with hospital systems.
+- Automated tests — unit and integration suites for the Zod schemas and services, component tests with Testing Library.
+- Persistent storage — replace the seeded in-memory store with PostgreSQL.
+- Authentication and role-based access control for clinicians.
+- FHIR-aligned export for interoperability.
 
 ---
 
