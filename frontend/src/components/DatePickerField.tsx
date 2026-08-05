@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { CalendarIcon } from "lucide-react";
 import { format, parseISO } from "date-fns";
 
@@ -26,11 +27,12 @@ const DatePickerField = ({
   placeholder = "Select date",
 }: DatePickerFieldProps) => {
   const date = value ? parseISO(value) : undefined;
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="grid gap-1.5">
       {label && <Label htmlFor={id}>{label}</Label>}
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             id={id}
@@ -52,7 +54,10 @@ const DatePickerField = ({
           <Calendar
             mode="single"
             selected={date}
-            onSelect={(d) => onChange(d ? format(d, "yyyy-MM-dd") : "")}
+            onSelect={(d) => {
+              onChange(d ? format(d, "yyyy-MM-dd") : "");
+              setOpen(false);
+            }}
             autoFocus
           />
         </PopoverContent>

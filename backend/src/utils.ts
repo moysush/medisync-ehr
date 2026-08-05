@@ -39,8 +39,8 @@ const OccupationalHealthcareSchema = BaseEntrySchema.extend({
   employerName: z.string(),
   sickLeave: z
     .object({
-      startDate: z.string(),
-      endDate: z.string(),
+      startDate: z.iso.date(),
+      endDate: z.iso.date(),
     })
     .optional(),
 });

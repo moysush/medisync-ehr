@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import DatePickerField from "../DatePickerField";
+import { genderLabel } from "../../utility/format";
 
 import { PatientFormValues, Gender } from "../../types";
 
@@ -20,15 +21,7 @@ interface Props {
   onSubmit: (values: PatientFormValues) => void;
 }
 
-interface GenderOption {
-  value: Gender;
-  label: string;
-}
-
-const genderOptions: GenderOption[] = Object.values(Gender).map((v) => ({
-  value: v,
-  label: v.charAt(0).toUpperCase() + v.slice(1),
-}));
+const genderOptions: Gender[] = Object.values(Gender);
 
 const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
   const [name, setName] = useState("");
@@ -94,9 +87,9 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
             <SelectValue placeholder="Select gender" />
           </SelectTrigger>
           <SelectContent>
-            {genderOptions.map((option) => (
-              <SelectItem key={option.label} value={option.value}>
-                {option.label}
+            {genderOptions.map((value) => (
+              <SelectItem key={value} value={value}>
+                {genderLabel(value)}
               </SelectItem>
             ))}
           </SelectContent>

@@ -10,24 +10,17 @@ router.get("/", (_req, res) => {
 });
 
 router.get("/:id", (req, res) => {
-  try {
-    const patient = patientsService.findById(req.params.id);
-    if (!patient) {
-      throw new Error("Patient not found");
-    }
-    res.send(patient);
-  } catch (error) {
-    res.status(400).json({
-      error: error instanceof Error ? error.message : "unknown error",
-    });
+  const patient = patientsService.findById(req.params.id);
+  if (!patient) {
+    res.status(404).json({ error: "Patient not found" });
+    return;
   }
+  res.send(patient);
 });
 
 router.post("/", (req, res) => {
   try {
-    // type guard and validator
     const newPatientEntry = toNewPatient(req.body);
-    // adding patient in the database and getting an id for the patient
     const addedPatient = patientsService.addPatient(newPatientEntry);
     res.json(addedPatient);
   } catch (error) {
@@ -39,16 +32,16 @@ router.post("/", (req, res) => {
 
 router.post("/:id/entries", (req, res) => {
   try {
-    // const { body } = req.body;
     const validEntry = toNewEntry(req.body);
     const addedEntry = patientsService.addEntry(req.params.id, validEntry);
     if (!addedEntry) {
-      res.status(400).json({ error: "Patient not found" });
+      res.status(404).json({ error: "Patient not found" });
+      return;
     }
     res.json(addedEntry);
   } catch (error) {
     res.status(400).json({
-      error: error instanceof z.ZodError ? error.issues : "unknown error",
+      error: error instanceof z.ZodError ? error.issues : "Unknown error",
     });
   }
 });

@@ -21,17 +21,17 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { Diagnosis, Patient } from "../../types";
+import { Diagnosis, Gender, Patient } from "../../types";
 import patientService from "../../services/patients";
 import diagnosesService from "../../services/diagnoses";
 import { formatDate, initialsOf } from "../../utility/format";
 import EntryDetails from "./EntryDetails";
 import EntryForm from "./EntryForm";
 
-const genderIcon = (gender: Patient["gender"]) =>
-  gender === "male" ? (
+const genderIcon = (gender: Gender) =>
+  gender === Gender.Male ? (
     <Mars className="size-4 text-primary" />
-  ) : gender === "female" ? (
+  ) : gender === Gender.Female ? (
     <Venus className="size-4 text-primary" />
   ) : (
     <Transgender className="size-4 text-primary" />

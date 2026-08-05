@@ -34,6 +34,7 @@ import {
   Diagnosis,
   Discharge,
   EntryWithoutId,
+  HealthCheckRating,
   Patient,
   SickLeave,
 } from "../../types";
@@ -58,7 +59,7 @@ interface EntryFormState {
   specialist: string;
   diagnosisCodes: string[];
   entryType: EntryType;
-  healthCheckRating: number;
+  healthCheckRating: HealthCheckRating;
   discharge: Discharge;
   employerName: string;
   sickLeave: SickLeave;
@@ -70,7 +71,7 @@ const initialForm: EntryFormState = {
   specialist: "",
   diagnosisCodes: [],
   entryType: "HealthCheck",
-  healthCheckRating: 0,
+  healthCheckRating: HealthCheckRating.Healthy,
   discharge: { date: "", criteria: "" },
   employerName: "",
   sickLeave: { startDate: "", endDate: "" },

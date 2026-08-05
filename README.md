@@ -36,7 +36,7 @@ A full-stack, **end-to-end type-safe** electronic health record system for manag
 - **Validation at the edge.** All inbound data is parsed by **Zod** schemas before it touches business logic; entry types are validated as a discriminated union, and exhaustive rendering on the client is guaranteed with an `assertNever` helper — adding a new entry type produces compile errors everywhere it must be handled.
 - **Layered backend.** Routes stay thin; business logic and data access live in services; seed data lives in a dedicated module. Swapping the in-memory store for a real database changes one file, not the API surface.
 - **Componentized UI.** A curated shadcn/ui + Radix primitive layer sits under feature components, giving consistent, accessible markup with almost no bespoke CSS.
-- **Reproducible tooling.** pnpm with a frozen lockfile, multi-stage production images, and a dedicated dev Compose stack with Vite HMR behind an nginx reverse proxy.
+- **Reproducible tooling.** pnpm with a frozen lockfile, multi-stage production images, and a dedicated dev Compose stack with Vite HMR behind an nginx reverse proxy. Production images are kept lean (the backend runtime is Alpine + Node, ~136MB), and the frontend nginx config adds SPA history-mode fallback so deep links survive a refresh.
 
 ## Tech stack
 
@@ -53,6 +53,7 @@ A full-stack, **end-to-end type-safe** electronic health record system for manag
 ```text
 medisync-ehr/
 ├── frontend/                 # React SPA (Vite + Tailwind v4 + shadcn/ui)
+│   ├── nginx.conf            # Static-serving config with SPA fallback
 │   ├── src/
 │   │   ├── components/       # Pages, forms, and shadcn/ui primitives
 │   │   ├── services/         # Typed Axios API clients
@@ -112,7 +113,7 @@ pnpm install
 pnpm dev
 ```
 
-Frontend (defaults to the backend above):
+Frontend (Vite dev server, proxies `/api` to `http://localhost:3001`):
 
 ```bash
 cd frontend
@@ -120,10 +121,10 @@ pnpm install
 pnpm dev
 ```
 
-Open <http://localhost:5173>. If your backend runs elsewhere, set `VITE_API_BASE_URL` (e.g. `.env.local`):
+Open <http://localhost:5173>. The frontend calls the API through a same-origin `/api` path — Vite proxies it to the backend during local dev, and the nginx reverse proxy does the same in Docker. To point somewhere else, set `VITE_API_BASE_URL` (e.g. in `.env.local`):
 
 ```bash
-VITE_API_BASE_URL=http://localhost:3001/api
+VITE_API_BASE_URL=https://api.example.com/api
 ```
 
 > Requires pnpm. If you don't have it, run `corepack enable` first.
@@ -159,7 +160,7 @@ Every `POST` body is validated server-side with Zod; malformed payloads return s
 | Variable            | Scope    | Default                        |
 | ------------------- | -------- | ------------------------------ |
 | `PORT`              | backend  | `3001`                         |
-| `VITE_API_BASE_URL` | frontend | `http://localhost:3001/api`    |
+| `VITE_API_BASE_URL` | frontend | `/api` (same-origin; Vite/nginx proxy to backend) |
 
 ## What's next
 

@@ -32,16 +32,13 @@ import { Gender, Patient, PatientFormValues } from "../../types";
 import AddPatientModal from "../AddPatientModal";
 import patientService from "../../services/patients";
 import { getErrorMessage } from "../../utility/errorMessage";
-import { initialsOf } from "../../utility/format";
+import { genderLabel, initialsOf } from "../../utility/format";
 
 interface Props {
   patients: Patient[];
   setPatients: React.Dispatch<React.SetStateAction<Patient[]>>;
   loading: boolean;
 }
-
-const genderLabel = (gender: Gender): string =>
-  gender.charAt(0).toUpperCase() + gender.slice(1);
 
 const headCellClass = "px-4 text-sm font-medium text-muted-foreground";
 
