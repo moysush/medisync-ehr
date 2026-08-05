@@ -25,12 +25,13 @@ An end-to-end type-safe electronic health record for managing patient directorie
 
 <p align="center">
   <img src="./screenshots/demo.gif" width="640" />
-  <br /><em>In action — search, record view, and a calendar entry that closes on selection</em>
+  <br /><em>In action — directory and entry search, record view, and a calendar entry that closes on selection</em>
 </p>
 
 ## Features
 
 - **Patient directory** — live statistics, instant search by name or occupation, and one click to a full record.
+- **Search inside a record** — filter a patient's entries instantly by description, specialist, diagnosis code or name, and entry type.
 - **Typed medical entries** — Health Check, Hospital, and Occupational Healthcare, validated as a Zod *discriminated union* and rendered with type-specific UIs.
 - **Searchable diagnosis codes** — an ICD-10-style combobox with multi-select and removable tag pills.
 - **Calendar-first inputs** — every date field uses a calendar picker that closes on selection.
