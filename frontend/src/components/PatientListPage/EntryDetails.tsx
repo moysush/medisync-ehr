@@ -1,27 +1,13 @@
-import {
-  BriefcaseBusiness,
-  Heart,
-  Hospital,
-  ShieldCheck,
-  Stethoscope,
-} from "lucide-react";
+import { BriefcaseBusiness, Heart } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { Diagnosis, Entry } from "../../types";
 import { assertNever } from "../../utility/assertNever";
+import { entryTypeMeta } from "../../utility/entryType";
 import { formatDate } from "../../utility/format";
 import { healthRatingMeta } from "../../utility/healthRating";
-
-const entryTypeMeta = {
-  Hospital: { label: "Hospital", icon: Hospital },
-  HealthCheck: { label: "Health check", icon: ShieldCheck },
-  OccupationalHealthcare: {
-    label: "Occupational",
-    icon: Stethoscope,
-  },
-} as const;
 
 interface EntryProps {
   entry: Entry;

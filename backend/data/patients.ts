@@ -7,7 +7,7 @@ const patients: Patient[] = [
     dateOfBirth: '1986-07-09',
     ssn: '090786-122X',
     gender: Gender.Male,
-    occupation: 'New york city cop',
+    occupation: 'NYPD Detective',
     entries: [
       {
         id: 'd811e46d-70b3-4d90-b090-4535c7cf8fb1',
@@ -30,7 +30,7 @@ const patients: Patient[] = [
     dateOfBirth: '1979-01-30',
     ssn: '300179-777A',
     gender: Gender.Male,
-    occupation: 'Cop',
+    occupation: 'LAPD Detective',
     entries: [
       {
         id: 'fcd59fa6-c4b4-4fec-ac4d-df4fe1f85f62',

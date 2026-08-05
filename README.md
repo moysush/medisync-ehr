@@ -97,7 +97,7 @@ medisync-ehr/
 
 ## Getting started
 
-Requires pnpm (`corepack enable` if missing).
+Requires pnpm (`corepack enable` if missing). Both packages pin pnpm via the `packageManager` field (pnpm@11.20.0), so corepack resolves the same version on any machine.
 
 ### Docker — production-like
 

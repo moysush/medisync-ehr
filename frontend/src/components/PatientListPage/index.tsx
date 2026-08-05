@@ -5,7 +5,6 @@ import {
   ClipboardList,
   Mars,
   Plus,
-  Search,
   SearchX,
   Transgender,
   Users,
@@ -25,11 +24,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { Gender, Patient, PatientFormValues } from "../../types";
 import AddPatientModal from "../AddPatientModal";
+import SearchInput from "../SearchInput";
 import patientService from "../../services/patients";
 import { getErrorMessage } from "../../utility/errorMessage";
 import { genderLabel, initialsOf } from "../../utility/format";
@@ -128,15 +127,12 @@ const PatientListPage = ({ patients, setPatients, loading }: Props) => {
         ))}
       </div>
 
-      <div className="relative w-full max-w-sm">
-        <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          className="pl-9"
-          placeholder="Search by name or occupation..."
-          value={query}
-          onChange={({ target }) => setQuery(target.value)}
-        />
-      </div>
+      <SearchInput
+        className="w-full max-w-sm"
+        placeholder="Search by name or occupation..."
+        value={query}
+        onChange={setQuery}
+      />
 
       <Card>
         <CardContent className="p-0">

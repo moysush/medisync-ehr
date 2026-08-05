@@ -2,6 +2,7 @@
   "name": "frontend-new",
   "private": true,
   "version": "0.0.0",
+  "packageManager": "pnpm@11.20.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host",

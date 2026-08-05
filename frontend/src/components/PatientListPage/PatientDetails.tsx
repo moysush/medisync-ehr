@@ -1,11 +1,12 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   BriefcaseBusiness,
   CalendarDays,
   IdCard,
   Mars,
   Plus,
+  SearchX,
   Transgender,
   Venus,
 } from "lucide-react";
@@ -21,10 +22,13 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { Diagnosis, Gender, Patient } from "../../types";
+import { Diagnosis, Entry, Gender, Patient } from "../../types";
 import patientService from "../../services/patients";
 import diagnosesService from "../../services/diagnoses";
 import { formatDate, initialsOf } from "../../utility/format";
+import { healthRatingMeta } from "../../utility/healthRating";
+import { entryTypeMeta } from "../../utility/entryType";
+import SearchInput from "../SearchInput";
 import EntryDetails from "./EntryDetails";
 import EntryForm from "./EntryForm";
 
@@ -37,11 +41,43 @@ const genderIcon = (gender: Gender) =>
     <Transgender className="size-4 text-primary" />
   );
 
+const entrySearchText = (entry: Entry, diagnoses: Diagnosis[]): string => {
+  const parts: Array<string | undefined> = [
+    entry.description,
+    entry.specialist,
+    formatDate(entry.date),
+    entryTypeMeta[entry.type].label,
+  ];
+  entry.diagnosisCodes?.forEach((code) => {
+    parts.push(code, diagnoses.find((d) => d.code === code)?.name);
+  });
+  switch (entry.type) {
+    case "Hospital":
+      parts.push(
+        formatDate(entry.discharge.date),
+        entry.discharge.criteria,
+      );
+      break;
+    case "HealthCheck":
+      parts.push(healthRatingMeta[entry.healthCheckRating].label);
+      break;
+    case "OccupationalHealthcare":
+      parts.push(
+        entry.employerName,
+        entry.sickLeave && formatDate(entry.sickLeave.startDate),
+        entry.sickLeave && formatDate(entry.sickLeave.endDate),
+      );
+      break;
+  }
+  return parts.filter(Boolean).join(" ").toLowerCase();
+};
+
 const PatientDetails = () => {
   const { id } = useParams<string>();
   const [patient, setPatient] = useState<Patient>();
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>();
   const [showForm, setShowForm] = useState<boolean>(false);
+  const [query, setQuery] = useState<string>("");
 
   useEffect(() => {
     if (id) {
@@ -49,6 +85,14 @@ const PatientDetails = () => {
       diagnosesService.getAllDiagnoses().then((res) => setDiagnoses(res));
     }
   }, [id]);
+
+  const filteredEntries = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return patient?.entries ?? [];
+    return (patient?.entries ?? []).filter((entry) =>
+      entrySearchText(entry, diagnoses ?? []).includes(q),
+    );
+  }, [patient, diagnoses, query]);
 
   if (!patient || !diagnoses) {
     return (
@@ -111,8 +155,21 @@ const PatientDetails = () => {
         />
       )}
 
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold tracking-tight">Entries</h2>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <h2 className="text-xl font-semibold tracking-tight">Entries</h2>
+          <SearchInput
+            className="w-72"
+            placeholder="Search entries..."
+            value={query}
+            onChange={setQuery}
+          />
+          {query && (
+            <span className="text-sm leading-none whitespace-nowrap text-muted-foreground">
+              {filteredEntries.length} of {patient.entries.length}
+            </span>
+          )}
+        </div>
         {!showForm && (
           <Button onClick={() => setShowForm(true)}>
             <Plus />
@@ -125,8 +182,16 @@ const PatientDetails = () => {
         <p className="rounded-2xl border border-dashed p-8 text-center text-muted-foreground">
           No entries yet. Add the first entry to this record.
         </p>
+      ) : filteredEntries.length === 0 ? (
+        <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed p-8 text-center">
+          <SearchX className="size-10 text-muted-foreground" />
+          <p className="font-medium">No entries found</p>
+          <p className="text-sm text-muted-foreground">
+            Nothing matches "{query}". Try a different search.
+          </p>
+        </div>
       ) : (
-        patient.entries.map((entry) => (
+        filteredEntries.map((entry) => (
           <EntryDetails key={entry.id} entry={entry} diagnoses={diagnoses} />
         ))
       )}
